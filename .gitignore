@@ -11,5 +11,10 @@
 
 # R Environment Variables
 .Renviron
+
+# R Data files
+.RData
+
+# Fortran object files
 *.o
 *.so
