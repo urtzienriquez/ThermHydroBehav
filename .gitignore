@@ -6,6 +6,7 @@
 .Rapp.history
 
 # RStudio files
+.Rbuildignore
 .Rproj.user/
 
 # R Environment Variables
