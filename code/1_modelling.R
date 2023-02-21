@@ -1,11 +1,6 @@
 
 
 
-####
-# TO DO:
-# add strategies: fixed depths
-
-setwd('~/Dropbox/1_papers/CAS/I_alpestris/0_living_underground')
 rm(list=ls())
 
 library(NicheMapR)
@@ -84,7 +79,7 @@ micro_time_finish <- Sys.time()
 #
 # Ectotherm
 
-tpref <- read.table('~/Dropbox/1_papers/CAS/I_alpestris/data/doi_10.5061_dryad.860ks__v1/Gvozdik_Kristin_TP.txt', 
+tpref <- read.table('./data/Gvozdik_Kristin_TP.txt', 
                     header=T, sep='\t')
 str(tpref)
 
@@ -182,7 +177,7 @@ environs_50cm <- list(b1w0_50cm = environ_b1w0_50cm, b2w0_50cm = environ_b2w0_50
 ######################
 ## metabolic rates
 
-mrs <- read.table('~/Dropbox/1_papers/CAS/I_alpestris/data/doi_10.5061_dryad.860ks__v1/Gvozdik_Kristin_AS.txt', 
+mrs <- read.table('./data/Gvozdik_Kristin_AS.txt', 
                   header=T, sep='\t')
 str(mrs)
 colnames(mrs) <- c('temp', 'sex', 'mass', 'smr', 'mmr', 'scope', 'fscope')
