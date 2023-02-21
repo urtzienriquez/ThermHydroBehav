@@ -11,3 +11,5 @@
 
 # R Environment Variables
 .Renviron
+*.o
+*.so
