@@ -13,7 +13,7 @@
 .Renviron
 
 # R Data files
-/results/.RData
+*.RData
 
 # Fortran object files
 *.o
