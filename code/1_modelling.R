@@ -20,7 +20,6 @@ dfinish <- "31/07/2018"
 
 minshade <- 0
 maxshade <- 90
-DEP <- c(0, 2,  3,  5,  8,  12,  20,  30,  50,  100)
 Thcond <- 2.5
 SpecHeat <- 870
 Density <- 2.56
@@ -67,7 +66,7 @@ micro <- micro_ncep(SLE = SLE, warm = warm, soilgrids = soilgrids, dstart = dsta
                     loc = c(lon, lat), runshade = 1, run.gads = 1, snowmodel = 1, runmoist = 1,
                     BulkDensity =  BulkDensity, cap = cap,
                     Density = Density, Thcond = Thcond, SpecHeat = SpecHeat,
-                    windfac = windfac, spatial = spatial, ERR = ERR, dem = dem, DEP=DEP)
+                    windfac = windfac, spatial = spatial, ERR = ERR, dem = dem)
 
 metout <- data.frame(micro$metout)
 micro_time_finish <- Sys.time()
