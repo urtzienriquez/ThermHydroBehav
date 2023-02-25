@@ -7,13 +7,9 @@ library(microclima)
 library(raster)
 
 #################################
-# Check microclimate modelling 
+# microclimate modelling 
 
-# # 1 year (2010)
-# dstart <- "01/08/2010"
-# dfinish <- "31/07/2011"
-
-# 10 year (2010-2019)
+# 10 year (2009-2018)
 dstart <- "01/08/2009"
 dfinish <- "31/07/2018"
 
@@ -70,7 +66,8 @@ micro <- micro_ncep(SLE = SLE, warm = warm, soilgrids = soilgrids, dstart = dsta
 soil <- data.frame(micro$soil)
 plot(micro$dates, soil$D0cm, type='l')
 
-save(micro, file='../results/micro_Jihlava.Rda', compress="xz")
+# save(micro, file='../results/micro_Jihlava.Rda', compress="xz")
+
 
 #############################
 # microclimates under various scenarios of climate change
@@ -92,9 +89,9 @@ for(r in rcp){
     
     
     tmax.dif.files <- list.files(folder.tmax, pattern='*.tif', full.names=T)
-    tmax.dif <- stack(tmax.dif.files)
+    tmax.dif <- raster::stack(tmax.dif.files)
     prec.dif.files <- list.files(folder.prec, pattern='*.tif', full.names=T)
-    prec.dif <- stack(prec.dif.files)
+    prec.dif <- raster::stack(prec.dif.files)
     
     
     tx.dif.local <- c(raster::extract(tmax.dif, cbind(lon,lat)))
@@ -111,7 +108,7 @@ for(r in rcp){
     
     warm <- c(tx.dif.daily$y[212:365], rep(tx.dif.daily$y, 8), tx.dif.daily$y[1:213])
     rainoff <- c(prec.dif.daily$y[212:365], rep(prec.dif.daily$y, 8), prec.dif.daily$y[1:213])
-    ERR <- 3
+    ERR <- 5
     
     micro <- micro_ncep(SLE = SLE, soilgrids = soilgrids, dstart = dstart, dfinish = dfinish,
                         Usrhyt = Usrhyt, slope = slope, aspect = aspect, REFL = REFL,
@@ -121,6 +118,7 @@ for(r in rcp){
                         Density = Density, Thcond = Thcond, SpecHeat = SpecHeat,
                         windfac = windfac, spatial = spatial, ERR = ERR, dem = dem,
                         warm = warm, rainoff = rainoff)
+    save(micro, file=paste0('../results/micro_',g,'_',r,'.Rda'), compress="xz")
   }
 }
 
