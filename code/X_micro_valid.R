@@ -1,16 +1,18 @@
 
 
+setwd('../data/micro_studenec')
+
+
 library(NicheMapR)
 library(microclima)
 library(raster)
 
 
-dstart <- "01/08/2009"
-dfinish <- "31/07/2018"
+dstart <- "01/08/2020"
+dfinish <- "31/07/2021"
 
 minshade <- 0
 maxshade <- 90
-DEP <- c(0, 2,  3,  5,  8,  12,  20,  30,  50,  100)
 Thcond <- 2.5
 SpecHeat <- 870
 Density <- 2.56
@@ -47,9 +49,8 @@ hori[hori < 0] <- 0
 hori[hori > 90] <- 90
 
 soilgrids <- 0
-spatial <- '/Volumes/urdintxu/ncep_time'
+spatial <- NA
 ERR <- 1.5
-
 
 micro <- micro_ncep(SLE = SLE, warm = warm, soilgrids = soilgrids, dstart = dstart, dfinish = dfinish,
                     Usrhyt = Usrhyt, slope = slope, aspect = aspect, REFL = REFL,
@@ -57,14 +58,19 @@ micro <- micro_ncep(SLE = SLE, warm = warm, soilgrids = soilgrids, dstart = dsta
                     loc = c(lon, lat), runshade = 1, run.gads = 1, snowmodel = 1, runmoist = 1,
                     BulkDensity =  BulkDensity, cap = cap,
                     Density = Density, Thcond = Thcond, SpecHeat = SpecHeat,
-                    windfac = windfac, spatial = spatial, ERR = ERR, dem = dem, DEP=DEP)
+                    windfac = windfac, spatial = spatial, ERR = ERR, dem = dem, 
+                    save = 2)
 
-metout <- data.frame(micro$metout)
-
+soil <- data.frame(micro$soil)
 
 
 # read logged data
-tsun1_0cm <- read.table('./data/sun_temp_1_0.txt', header=F, sep=',')
+tsun1_0cm <- read.table('./sun_temp_1_0.txt', header=F, sep=',', fill=T)
 tsun1_0cm <- data.frame(datetime = as.POSIXct(strptime(tsun1_0cm[,1], "%d.%m.%y %H:%M:%S")),
                         temp = as.numeric(paste(tsun1_0cm[,3],tsun1_0cm[,4], sep='.')))
-with(tsun1_0cm, plot(datetime, temp, type='l'))
+
+# plot
+with(soil, plot(micro$dates, D0cm, type='l'))
+with(tsun1_0cm, points(datetime, temp, type='l', col='red'))
+
+
