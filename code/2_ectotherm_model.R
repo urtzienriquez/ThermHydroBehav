@@ -111,7 +111,7 @@ gcm <- c('CCSM4', 'GFDL-CM3', 'HadGEM2-CC')
 
 for(r in rcp){
   for(g in gcm){
-    load(micro_files[grep(g, micro_files[grep(r, micro_files)])]) # grep rcp and gcm scenario
+    load(micro_files[grep(r, micro_files)][grep(g, micro_files[grep(r, micro_files)])]) # grep rcp and gcm scenario
     
     # run ectotherm models as above, with all behavioral strategies, shading levels, and restrictions
     for(s in shade){
