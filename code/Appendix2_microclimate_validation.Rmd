@@ -1,5 +1,5 @@
 ---
-title: Appendix 2 - Validation of the microclimate model
+title: Appendix 2 - Validation of the microclimate model in Studenec, Czechia
 author: "Urtzi Enriquez-Urzelai & Lumír Gvoždík"
 date: "`r Sys.Date()`"
 output: 
