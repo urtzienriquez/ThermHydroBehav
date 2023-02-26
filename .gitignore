@@ -14,7 +14,7 @@
 
 # R Data files
 *.RData
-*ecto*.Rda
+*ecto_*_*.Rda
 
 # Fortran object files
 *.o
