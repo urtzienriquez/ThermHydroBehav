@@ -10,20 +10,21 @@ library(raster)
 #################################
 # Check microclimate modelling 
 
-# # 1 year (2010)
-# dstart <- "01/08/2010"
-# dfinish <- "31/07/2011"
-
 # 10 year (2010-2019)
 dstart <- "01/08/2009"
 dfinish <- "31/07/2018"
 
+lon <- 16.057985 # Jihlava, Czechia
+lat <- 49.224752 # Jihlava, Czechia
+dstart <- "01/08/2020"
+dfinish <- "31/07/2021"
 minshade <- 0
 maxshade <- 90
-Thcond <- 2.5
+rainmult <- 1.1
+Thcond <- 1.5 # 2.5
 SpecHeat <- 870
 Density <- 2.56
-BulkDensity <- 1.3
+BulkDensity <- 2.45 # 1.3
 windfac <- 1
 REFL <- 0.2
 cap <- FALSE
@@ -31,9 +32,9 @@ SLE <- 0.95
 warm <- 0
 Usrhyt <- 0.01
 clearsky <- FALSE
-lon <- 16.057985
-lat <- 49.224752
-
+soilgrids <- 0
+spatial <- '/Volumes/urdintxu/ncep_time'
+ERR <- 1
 
 dem <- microclima::get_dem(r = NA, lat = lat, lon = lon, resolution = 30, zmin = -20, xdims = 100, ydims = 100)
 
@@ -54,10 +55,6 @@ for (i in 0:35) {
 hori <- spline(x = ha36, n = 24, method =  'periodic')$y
 hori[hori < 0] <- 0
 hori[hori > 90] <- 90
-
-soilgrids <- 0
-spatial <- '/Volumes/urdintxu/ncep_time'
-ERR <- 1.5
 
 
 micro <- micro_ncep(SLE = SLE, warm = warm, soilgrids = soilgrids, dstart = dstart, dfinish = dfinish,

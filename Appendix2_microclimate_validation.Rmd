@@ -44,11 +44,11 @@ dstart <- "01/08/2020"
 dfinish <- "31/07/2021"
 minshade <- 0
 maxshade <- 90
-rainmult <- 1.5
-Thcond <- 2.8 # 2.5
+rainmult <- 1.1
+Thcond <- 1.5 # 2.5
 SpecHeat <- 870
 Density <- 2.56
-BulkDensity <- 2.5
+BulkDensity <- 2.45 # 1.3
 windfac <- 1
 REFL <- 0.2
 cap <- FALSE
@@ -58,7 +58,7 @@ Usrhyt <- 0.01
 clearsky <- FALSE
 soilgrids <- 0
 spatial <- NA
-ERR <- 1.5
+ERR <- 1
 ```
 
 ```{r, eval=F}

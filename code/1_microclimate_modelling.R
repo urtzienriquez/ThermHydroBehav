@@ -9,16 +9,17 @@ library(raster)
 #################################
 # microclimate modelling 
 
-# 10 year (2009-2018)
-dstart <- "01/08/2009"
-dfinish <- "31/07/2018"
-
+lon <- 16.057985 # Jihlava, Czechia
+lat <- 49.224752 # Jihlava, Czechia
+dstart <- "01/08/2009" # 10 year (2009-2018)
+dfinish <- "31/07/2018" # 10 year (2009-2018)
 minshade <- 0
 maxshade <- 90
-Thcond <- 2.5
+rainmult <- 1.1
+Thcond <- 1.5 # 2.5
 SpecHeat <- 870
 Density <- 2.56
-BulkDensity <- 2.5
+BulkDensity <- 2.45 # 1.3
 windfac <- 1
 REFL <- 0.2
 cap <- FALSE
@@ -26,8 +27,9 @@ SLE <- 0.95
 warm <- 0
 Usrhyt <- 0.01
 clearsky <- FALSE
-lon <- 16.057985 # Jihlava, Czechia
-lat <- 49.224752 # Jihlava, Czechia
+soilgrids <- 0
+spatial <- '/Volumes/urdintxu/ncep_time'
+ERR <- 1
 
 
 dem <- microclima::get_dem(r = NA, lat = lat, lon = lon, resolution = 30, zmin = -20, xdims = 100, ydims = 100)
@@ -50,14 +52,10 @@ hori <- spline(x = ha36, n = 24, method =  'periodic')$y
 hori[hori < 0] <- 0
 hori[hori > 90] <- 90
 
-soilgrids <- 0
-spatial <- '/Volumes/urdintxu/ncep_time'
-ERR <- 3.5
-
 
 micro <- micro_ncep(SLE = SLE, warm = warm, soilgrids = soilgrids, dstart = dstart, dfinish = dfinish,
                     Usrhyt = Usrhyt, slope = slope, aspect = aspect, REFL = REFL,
-                    hori = hori, minshade = minshade, maxshade = maxshade,
+                    hori = hori, minshade = minshade, maxshade = maxshade, rainmult = rainmult,
                     loc = c(lon, lat), runshade = 1, run.gads = 1, snowmodel = 1, runmoist = 1,
                     BulkDensity =  BulkDensity, cap = cap,
                     Density = Density, Thcond = Thcond, SpecHeat = SpecHeat,
@@ -78,8 +76,6 @@ plot(micro$dates, humid$RH0cm, type='l')
 
 rcp <- c('rcp45', 'rcp85')
 gcm <- c('CCSM4', 'GFDL-CM3', 'HadGEM2-CC')
-
-
 
 for(r in rcp){
   for(g in gcm){
@@ -111,17 +107,18 @@ for(r in rcp){
     
     warm <- c(tx.dif.daily$y[212:365], rep(tx.dif.daily$y, 8), tx.dif.daily$y[1:213])
     rainoff <- c(prec.dif.daily$y[212:365], rep(prec.dif.daily$y, 8), prec.dif.daily$y[1:213])
-    ERR <- 5
+    ERR <- 2.5
     
     micro <- micro_ncep(SLE = SLE, soilgrids = soilgrids, dstart = dstart, dfinish = dfinish,
                         Usrhyt = Usrhyt, slope = slope, aspect = aspect, REFL = REFL,
-                        hori = hori, minshade = minshade, maxshade = maxshade,
+                        hori = hori, minshade = minshade, maxshade = maxshade, rainmult = rainmult,
                         loc = c(lon, lat), runshade = 1, run.gads = 1, snowmodel = 1, runmoist = 1,
                         BulkDensity =  BulkDensity, cap = cap,
                         Density = Density, Thcond = Thcond, SpecHeat = SpecHeat,
                         windfac = windfac, spatial = spatial, ERR = ERR, dem = dem,
                         warm = warm, rainoff = rainoff)
     save(micro, file=paste0('../results/micro_',g,'_',r,'.Rda'), compress="xz")
+    print(paste0('micro_',g,'_',r,' done!'))
   }
 }
 
