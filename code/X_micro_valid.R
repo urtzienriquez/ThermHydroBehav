@@ -63,10 +63,13 @@ micro <- micro_ncep(SLE = SLE, warm = warm, soilgrids = soilgrids, dstart = dsta
                     save = 2)
 
 soil <- data.frame(micro$soil)
+humid <- data.frame(micro$humid)
 
 
+# soil temperature
 # read logged data
 tsun1_0cm <- read.table('./sun_temp_1_0.txt', header=F, sep=',', fill=T)
+tsun1_0cm[is.na(tsun1_0cm[,4]), 4] <- 0
 tsun1_0cm <- data.frame(datetime = as.POSIXct(strptime(tsun1_0cm[,1], "%d.%m.%y %H:%M:%S")),
                         temp = as.numeric(paste(tsun1_0cm[,3],tsun1_0cm[,4], sep='.')))
 
@@ -74,4 +77,21 @@ tsun1_0cm <- data.frame(datetime = as.POSIXct(strptime(tsun1_0cm[,1], "%d.%m.%y 
 with(soil, plot(micro$dates, D0cm, type='l'))
 with(tsun1_0cm, points(datetime, temp, type='l', col='red'))
 
+
+# soil humidity
+# read logged data
+hsun1_0cm <- read.table('./sun_hum_1_0.txt', header=F, sep=',', fill=T)
+hsun1_0cm[is.na(hsun1_0cm[,4]), 4] <- 0
+hsun1_0cm <- data.frame(datetime = as.POSIXct(strptime(hsun1_0cm[,1], "%d.%m.%y %H:%M:%S")),
+                        hum = as.numeric(paste(hsun1_0cm[,3],hsun1_0cm[,4], sep='.')) / 100)
+
+with(hsun1_0cm, plot(datetime, hum, type='l'))
+
+
+# plot
+with(humid, plot(micro$dates, RH0cm, type='l', ylim=c(0,1)))
+with(hsun1_0cm, points(datetime, hum, type='l', col='red'))
+
+with(humid, plot(micro$dates, RH30cm, type='l', ylim=c(0,1)))
+with(hsun1_0cm, points(datetime, hum, type='l', col='red'))
 

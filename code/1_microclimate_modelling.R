@@ -18,7 +18,7 @@ maxshade <- 90
 Thcond <- 2.5
 SpecHeat <- 870
 Density <- 2.56
-BulkDensity <- 1.3
+BulkDensity <- 2.5
 windfac <- 1
 REFL <- 0.2
 cap <- FALSE
@@ -52,7 +52,7 @@ hori[hori > 90] <- 90
 
 soilgrids <- 0
 spatial <- '/Volumes/urdintxu/ncep_time'
-ERR <- 5
+ERR <- 3.5
 
 
 micro <- micro_ncep(SLE = SLE, warm = warm, soilgrids = soilgrids, dstart = dstart, dfinish = dfinish,
@@ -65,6 +65,9 @@ micro <- micro_ncep(SLE = SLE, warm = warm, soilgrids = soilgrids, dstart = dsta
 
 soil <- data.frame(micro$soil)
 plot(micro$dates, soil$D0cm, type='l')
+
+humid <- data.frame(micro$humid)
+plot(micro$dates, humid$RH0cm, type='l')
 
 # save(micro, file='../results/micro_Jihlava.Rda', compress="xz")
 
