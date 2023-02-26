@@ -3,8 +3,9 @@ title: Appendix 2 - Validation of the microclimate model in Studenec, Czechia
 author: "Urtzi Enriquez-Urzelai & Lumír Gvoždík"
 date: "`r Sys.Date()`"
 output: 
-  pdf_document: default
   html_document: default
+  pdf_document: default
+  
 editor_options:
   chunk_output_type: console
 ---
