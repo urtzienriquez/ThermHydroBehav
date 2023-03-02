@@ -11,7 +11,7 @@
 
 <meta name="author" content="Urtzi Enriquez-Urzelai &amp; Lumír Gvoždík" />
 
-<meta name="date" content="2023-02-26" />
+<meta name="date" content="2023-03-03" />
 
 <title>Appendix 2 - Validation of the microclimate model in Studenec, Czechia</title>
 
@@ -1585,7 +1585,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Appendix 2 - Validation of the microclimate model in Studenec, Czechia</h1>
 <h4 class="author">Urtzi Enriquez-Urzelai &amp; Lumír Gvoždík</h4>
-<h4 class="date">2023-02-26</h4>
+<h4 class="date">2023-03-03</h4>
 
 </div>
 
@@ -1600,7 +1600,7 @@ div.tocify {
 <pre class="r"><code>library(NicheMapR)
 library(microclima)
 library(raster)</code></pre>
-<p>Set location (longitude and latitude for the IVB, Studenec, Czechia) and model parameters. Most model parameters take default values. To improve the fit of the model we decreased the thermal conductivity of the soil (<code>Thcond</code>; from 2.5 to 1.5) and increased bulk density (<code>BulkDensity</code> from 1.3 to 2.45). In addition, we slightly increased the parameter that controls water runon (<code>rainmult</code> from 1 to 1.1). We also run the model for two shading levels: full sun (0% shade; <code>minshade &lt;- 0</code>) and deep shade (90% shade; <code>maxshade &lt;- 90</code>). These shading levels represents the extremes that an organisms may encounter in a given location, as well as all inetermediate options (via interpolation).</p>
+<p>Set location (longitude and latitude for the IVB, Studenec, Czechia) and model parameters. Most model parameters take default values. To improve the fit of the model we decreased the thermal conductivity of the soil (<code>Thcond</code> from 2.5 to 1.5) and increased bulk density (<code>BulkDensity</code> from 1.3 to 2.45). In addition, we slightly increased the parameter that controls water runon (<code>rainmult</code> from 1 to 1.1). We also run the model for two shading levels: full sun (0% shade; <code>minshade &lt;- 0</code>) and deep shade (90% shade; <code>maxshade &lt;- 90</code>). These shading levels represents the extremes that an organisms may encounter in a given location, as well as all intermediate options (via interpolation).</p>
 <pre class="r"><code>lon &lt;- 16.056838 # Institute of Vertebrate Biology, Studenec, Czechia
 lat &lt;- 49.224799 # Institute of Vertebrate Biology, Studenec, Czechia
 dstart &lt;- &quot;01/08/2020&quot;
