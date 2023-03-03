@@ -14,7 +14,7 @@
 
 # R Data files
 *.RData
-*micro*5.Rda
+*micro_*5.Rda
 *ecto_*_sun_*.Rda
 *ecto_*_shade_*.Rda
 *ecto_*_shade.Rda
