@@ -51,7 +51,7 @@ for(s in shade){
     minshades <- micro$maxshade # shaded conditions
   } 
   else{
-    maxshades <- micro$minshade # unshaded conditions
+    maxshades <- micro$minshade + 1 # unshaded conditions
     minshades <- micro$minshade # unshaded conditions
   }
   
@@ -59,11 +59,11 @@ for(s in shade){
   for(i in 1:length(behav)){
     for(j in 1:length(bwater)){
       if(s) {
-        ecto_name <- paste0('ecto_b',behav[i],'w',bwater[j],'_shade')
+        ecto_name <- paste0('ecto_b',behav[i],'w',bwater[j],'_200cm_shade')
         shdburrow = 2
       }
       else {
-        ecto_name <- paste0('ecto_b',behav[i],'w',bwater[j],'_sun')
+        ecto_name <- paste0('ecto_b',behav[i],'w',bwater[j],'_200cm_sun')
         shdburrow = 0
       }
       ecto <- ectotherm(Ww_g =3.5, shape = 3, burrow=1,
@@ -82,18 +82,18 @@ for(s in shade){
   for(i in 1:length(behav)){
     for(j in 1:length(bwater)){
       if(s) {
-        ecto_name <- paste0('ecto_b',behav[i],'w',bwater[j],'_50cm','_shade')
+        ecto_name <- paste0('ecto_b',behav[i],'w',bwater[j],'_50cm_shade')
         shdburrow = 2
       }
       else {
-        ecto_name <- paste0('ecto_b',behav[i],'w',bwater[j],'_50cm','_sun')
+        ecto_name <- paste0('ecto_b',behav[i],'w',bwater[j],'_50cm_sun')
         shdburrow = 0
       }
       ecto <- ectotherm(Ww_g =3.5, shape = 3, burrow=1,
                         T_F_min = 4, T_F_max = ubt, T_pref = m_tpref,
                         T_B_min = 4, T_RB_min = 4,
                         CT_max = 36, CT_min = -2,
-                        diurn = 0, nocturn = 1, crepus = 1, shade_seek = 0, maxdepth = 10,
+                        diurn = 0, nocturn = 1, crepus = 1, shade_seek = 0, maxdepth = 8,
                         pct_wet = 90, burrowtmp = behav[i], burrowwtr = bwater[j],
                         maxshade=maxshades, minshade=minshades, shdburrow = shdburrow)
       save(ecto, file=paste0('../results/', ecto_name, '.Rda')) 
@@ -121,7 +121,7 @@ for(r in rcp){
         minshades <- micro$maxshade # shaded conditions
       } 
       else{
-        maxshades <- micro$minshade # unshaded conditions
+        maxshades <- micro$minshade + 1 # unshaded conditions
         minshades <- micro$minshade # unshaded conditions
       }
       
@@ -129,11 +129,11 @@ for(r in rcp){
       for(i in 1:length(behav)){
         for(j in 1:length(bwater)){
           if(s) {
-            ecto_name <- paste0('ecto_b',behav[i],'w',bwater[j],'_shade_',r,'_',g)
+            ecto_name <- paste0('ecto_b',behav[i],'w',bwater[j],'_200cm_shade_',g,'_',r)
             shdburrow = 2
           }
           else {
-            ecto_name <- paste0('ecto_b',behav[i],'w',bwater[j],'_sun_',r,'_',g)
+            ecto_name <- paste0('ecto_b',behav[i],'w',bwater[j],'_200cm_sun_',g,'_',r)
             shdburrow = 0
           }
           ecto <- ectotherm(Ww_g =3.5, shape = 3, burrow=1,
@@ -152,18 +152,18 @@ for(r in rcp){
       for(i in 1:length(behav)){
         for(j in 1:length(bwater)){
           if(s) {
-            ecto_name <- paste0('ecto_b',behav[i],'w',bwater[j],'_50cm','_shade_',r,'_',g)
+            ecto_name <- paste0('ecto_b',behav[i],'w',bwater[j],'_50cm_shade_',g,'_',r)
             shdburrow = 2
           }
           else {
-            ecto_name <- paste0('ecto_b',behav[i],'w',bwater[j],'_50cm','_sun_',r,'_',g)
+            ecto_name <- paste0('ecto_b',behav[i],'w',bwater[j],'_50cm_sun_',g,'_',r)
             shdburrow = 0
           }
           ecto <- ectotherm(Ww_g =3.5, shape = 3, burrow=1,
                             T_F_min = 4, T_F_max = ubt, T_pref = m_tpref,
                             T_B_min = 4, T_RB_min = 4,
                             CT_max = 36, CT_min = -2,
-                            diurn = 0, nocturn = 1, crepus = 1, shade_seek = 0, maxdepth = 10,
+                            diurn = 0, nocturn = 1, crepus = 1, shade_seek = 0, maxdepth = 8,
                             pct_wet = 90, burrowtmp = behav[i], burrowwtr = bwater[j],
                             maxshade=maxshades, minshade=minshades, shdburrow = shdburrow)
           save(ecto, file=paste0('../results/', ecto_name, '.Rda')) 
