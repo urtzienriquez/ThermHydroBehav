@@ -29,7 +29,7 @@ Usrhyt <- 0.01
 clearsky <- FALSE
 soilgrids <- 0
 spatial <- '/Volumes/urdintxu/ncep_time'
-ERR <- 1
+ERR <- 1.5
 
 
 dem <- microclima::get_dem(r = NA, lat = lat, lon = lon, resolution = 30, zmin = -20, xdims = 100, ydims = 100)
@@ -67,7 +67,7 @@ plot(micro$dates, soil$D0cm, type='l')
 humid <- data.frame(micro$humid)
 plot(micro$dates, humid$RH0cm, type='l')
 
-# save(micro, file='../results/micro_Jihlava.Rda', compress="xz")
+save(micro, file='../results/micro_Jihlava.Rda', compress="xz")
 
 
 #############################
@@ -118,7 +118,6 @@ for(r in rcp){
                         windfac = windfac, spatial = spatial, ERR = ERR, dem = dem,
                         warm = warm, rainoff = rainoff)
     save(micro, file=paste0('../results/micro_',g,'_',r,'.Rda'), compress="xz")
-    print(paste0('micro_',g,'_',r,' done!'))
   }
 }
 

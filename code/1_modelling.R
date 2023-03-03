@@ -75,7 +75,7 @@ micro_time_finish <- Sys.time()
 #
 # Ectotherm
 
-tpref <- read.table('./data/Gvozdik_Kristin_TP.txt', 
+tpref <- read.table('../data/Gvozdik_Kristin_TP.txt', 
                     header=T, sep='\t')
 str(tpref)
 
@@ -90,8 +90,8 @@ ubt <- mean(tpref$UBTp[tpref$Treatment == 'Food'])
 behav <- c(1,2,3) # 1 = cool shelters; 2 = warm shelters; 3 = pasive
 bwater <- c(0,1) # following moist shelters
 
-maxshades <- micro$maxshade
-minshades <- micro$maxshade # change this depending on sun/shade
+maxshades <- micro$minshade + 1
+minshades <- micro$minshade # change this depending on sun/shade
 
 # first thermoregulating "freely"
 for(i in 1:length(behav)){
