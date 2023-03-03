@@ -4,5 +4,5 @@
 
 To install this version of NicheMapR you can open the R-project file...
 
-![alt text](https://github.com/urtzienriquez/ThermHydroBehav/images/RStudio.png)
+![alt text](https://github.com/urtzienriquez/ThermHydroBehav/blob/main/images/RStudio.png)
 
