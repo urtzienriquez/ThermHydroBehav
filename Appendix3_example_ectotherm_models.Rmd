@@ -69,25 +69,25 @@ maxdepth <- 10 # up to 2 m
 # maxdepth <- 8 # up to 50 cm
 
 # morphology
-Ww_g =3.5, 
-shape = 3, 
-pct_wet = 90, 
+Ww_g <- 3.5
+shape <- 3 
+pct_wet <- 90
 
 # Physiology
-T_F_min = 4, 
-T_F_max = ubt, 
-T_pref = m_tpref,
-T_B_min = 4, 
-T_RB_min = 4,
-CT_max = 36, 
-CT_min = -2,
+T_F_min <- 4
+T_F_max <- ubt
+T_pref <- m_tpref
+T_B_min <- 4
+T_RB_min <- 4
+CT_max <- 36
+CT_min <- -2
 
 # general behaviour
-burrow=1,
-diurn = 0, 
-nocturn = 1, 
-crepus = 1, 
-shade_seek = 0, 
+burrow <- 1
+diurn <- 0
+nocturn <- 1
+crepus <- 1
+shade_seek <- 0
 
 # set behavioral strategy
 behav <- 1 # 1 = cold shelters; 2 = warm shelters; 3 = passive
