@@ -59,11 +59,11 @@ for(s in shade){
   for(i in 1:length(behav)){
     for(j in 1:length(bwater)){
       if(s) {
-        ecto_name <- paste0('ecto_b',behav[i],'w',bwater[j],'_200cm_shade')
+        ecto_name <- paste0('ecto_b',behav[i],'w',bwater[j],'_200cm_shade_current')
         shdburrow = 2
       }
       else {
-        ecto_name <- paste0('ecto_b',behav[i],'w',bwater[j],'_200cm_sun')
+        ecto_name <- paste0('ecto_b',behav[i],'w',bwater[j],'_200cm_sun_current')
         shdburrow = 0
       }
       ecto <- ectotherm(Ww_g =3.5, shape = 3, burrow=1,
@@ -82,11 +82,11 @@ for(s in shade){
   for(i in 1:length(behav)){
     for(j in 1:length(bwater)){
       if(s) {
-        ecto_name <- paste0('ecto_b',behav[i],'w',bwater[j],'_50cm_shade')
+        ecto_name <- paste0('ecto_b',behav[i],'w',bwater[j],'_50cm_shade_current')
         shdburrow = 2
       }
       else {
-        ecto_name <- paste0('ecto_b',behav[i],'w',bwater[j],'_50cm_sun')
+        ecto_name <- paste0('ecto_b',behav[i],'w',bwater[j],'_50cm_sun_current')
         shdburrow = 0
       }
       ecto <- ectotherm(Ww_g =3.5, shape = 3, burrow=1,
@@ -96,7 +96,7 @@ for(s in shade){
                         diurn = 0, nocturn = 1, crepus = 1, shade_seek = 0, maxdepth = 8,
                         pct_wet = 90, burrowtmp = behav[i], burrowwtr = bwater[j],
                         maxshade=maxshades, minshade=minshades, shdburrow = shdburrow)
-      save(ecto, file=paste0('../results/', ecto_name, '.Rda')) 
+      save(ecto, file=paste0('../results/', ecto_name, '.RData')) 
     }
   }
 }
@@ -105,69 +105,65 @@ for(s in shade){
 ##########################
 # Climate change scenarios
 
-micro_files <- list.files(path='../results', pattern='*5.Rda', full.names=T)
+micro_files <- list.files(path='../results', pattern='*5.RData', full.names=T)
 
-rcp <- c('rcp45', 'rcp85')
-gcm <- c('CCSM4', 'GFDL-CM3', 'HadGEM2-CC')
-
-for(r in rcp){
-  for(g in gcm){
-    load(micro_files[grep(r, micro_files)][grep(g, micro_files[grep(r, micro_files)])]) # grep rcp and gcm scenario
+sce <- c("cc45", "cc85", "gf45", "gf85", "hg45", "hg85") # scenarios
+for(sc in sce){
+  load(paste0("../results/micro_", sc, ".RData")) 
+  
+  # run ectotherm models as above, with all behavioral strategies, shading levels, and restrictions
+  for(s in shade){
+    if(s){
+      maxshades <- micro$maxshade # shaded conditions
+      minshades <- micro$maxshade # shaded conditions
+    } 
+    else{
+      maxshades <- micro$minshade + 1 # unshaded conditions
+      minshades <- micro$minshade # unshaded conditions
+    }
     
-    # run ectotherm models as above, with all behavioral strategies, shading levels, and restrictions
-    for(s in shade){
-      if(s){
-        maxshades <- micro$maxshade # shaded conditions
-        minshades <- micro$maxshade # shaded conditions
-      } 
-      else{
-        maxshades <- micro$minshade + 1 # unshaded conditions
-        minshades <- micro$minshade # unshaded conditions
-      }
-      
-      # first thermoregulating "freely"
-      for(i in 1:length(behav)){
-        for(j in 1:length(bwater)){
-          if(s) {
-            ecto_name <- paste0('ecto_b',behav[i],'w',bwater[j],'_200cm_shade_',g,'_',r)
-            shdburrow = 2
-          }
-          else {
-            ecto_name <- paste0('ecto_b',behav[i],'w',bwater[j],'_200cm_sun_',g,'_',r)
-            shdburrow = 0
-          }
-          ecto <- ectotherm(Ww_g =3.5, shape = 3, burrow=1,
-                            T_F_min = 4, T_F_max = ubt, T_pref = m_tpref,
-                            T_B_min = 4, T_RB_min = 4,
-                            CT_max = 36, CT_min = -2,
-                            diurn = 0, nocturn = 1, crepus = 1, shade_seek = 0, maxdepth = 10,
-                            pct_wet = 90, burrowtmp = behav[i], burrowwtr = bwater[j],
-                            maxshade=maxshades, minshade=minshades, shdburrow = shdburrow)
-          # shdburrow = 2 to simulate conditions in the shade
-          save(ecto, file=paste0('../results/', ecto_name, '.Rda')) 
+    # first thermoregulating "freely"
+    for(i in 1:length(behav)){
+      for(j in 1:length(bwater)){
+        if(s) {
+          ecto_name <- paste0('ecto_b',behav[i],'w',bwater[j],'_200cm_shade_',sc)
+          shdburrow = 2
         }
-      }
-      
-      # then thermoregulating to a maximum of 50 cm
-      for(i in 1:length(behav)){
-        for(j in 1:length(bwater)){
-          if(s) {
-            ecto_name <- paste0('ecto_b',behav[i],'w',bwater[j],'_50cm_shade_',g,'_',r)
-            shdburrow = 2
-          }
-          else {
-            ecto_name <- paste0('ecto_b',behav[i],'w',bwater[j],'_50cm_sun_',g,'_',r)
-            shdburrow = 0
-          }
-          ecto <- ectotherm(Ww_g =3.5, shape = 3, burrow=1,
-                            T_F_min = 4, T_F_max = ubt, T_pref = m_tpref,
-                            T_B_min = 4, T_RB_min = 4,
-                            CT_max = 36, CT_min = -2,
-                            diurn = 0, nocturn = 1, crepus = 1, shade_seek = 0, maxdepth = 8,
-                            pct_wet = 90, burrowtmp = behav[i], burrowwtr = bwater[j],
-                            maxshade=maxshades, minshade=minshades, shdburrow = shdburrow)
-          save(ecto, file=paste0('../results/', ecto_name, '.Rda')) 
+        else {
+          ecto_name <- paste0('ecto_b',behav[i],'w',bwater[j],'_200cm_sun_',sc)
+          shdburrow = 0
         }
+        ecto <- ectotherm(Ww_g =3.5, shape = 3, burrow=1,
+                          T_F_min = 4, T_F_max = ubt, T_pref = m_tpref,
+                          T_B_min = 4, T_RB_min = 4,
+                          CT_max = 36, CT_min = -2,
+                          diurn = 0, nocturn = 1, crepus = 1, shade_seek = 0, maxdepth = 10,
+                          pct_wet = 90, burrowtmp = behav[i], burrowwtr = bwater[j],
+                          maxshade=maxshades, minshade=minshades, shdburrow = shdburrow)
+        # shdburrow = 2 to simulate conditions in the shade
+        save(ecto, file=paste0('../results/', ecto_name, '.RData')) 
+      }
+    }
+    
+    # then thermoregulating to a maximum of 50 cm
+    for(i in 1:length(behav)){
+      for(j in 1:length(bwater)){
+        if(s) {
+          ecto_name <- paste0('ecto_b',behav[i],'w',bwater[j],'_50cm_shade_',sc)
+          shdburrow = 2
+        }
+        else {
+          ecto_name <- paste0('ecto_b',behav[i],'w',bwater[j],'_50cm_sun_',sc)
+          shdburrow = 0
+        }
+        ecto <- ectotherm(Ww_g =3.5, shape = 3, burrow=1,
+                          T_F_min = 4, T_F_max = ubt, T_pref = m_tpref,
+                          T_B_min = 4, T_RB_min = 4,
+                          CT_max = 36, CT_min = -2,
+                          diurn = 0, nocturn = 1, crepus = 1, shade_seek = 0, maxdepth = 8,
+                          pct_wet = 90, burrowtmp = behav[i], burrowwtr = bwater[j],
+                          maxshade=maxshades, minshade=minshades, shdburrow = shdburrow)
+        save(ecto, file=paste0('../results/', ecto_name, '.RData')) 
       }
     }
   }
@@ -178,16 +174,19 @@ for(r in rcp){
 # Compute metabolic rates from estimated Tbs
 # and with seasonal acclimation (70%)
 
-source('./aux_functions.R') # to load the smr.calc function that applies the model in 
-                            # line 26 to predict smr from tbs
+source('./aux_functions.R') # to load the smr.calc function that applies the model in
+# line 26 to predict smr from tbs
 ecto_files <- list.files(path='../results', pattern='ecto', full.names=T)
+# pdf("../results/ecto_explore.pdf")
 for(ec in ecto_files){
   load(ec)
-  environ <- ecto$environ
+  environ <- data.frame(ecto$environ)
+  # plot(environ$TC, type='l')
   if("SMR" %in% colnames(environ)){next}
   else{
     ecto <- smr.calc(ecto)
     save(ecto, file=ec)
   }
 }
+# dev.off()
 

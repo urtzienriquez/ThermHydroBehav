@@ -23,3 +23,10 @@
 # Fortran object files
 *.o
 *.so
+._ThermHydroBehav.Rproj
+code/._1_microclimate_modelling.R
+code/._2_ectotherm_model.R
+code/._4_figures.R
+code/._aux_functions.R
+nmr_src/._NicheMapR.Rproj
+results/._micro_Jihlava.Rda

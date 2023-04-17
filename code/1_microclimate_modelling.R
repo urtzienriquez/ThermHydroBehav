@@ -1,6 +1,7 @@
 
 
 rm(list=ls())
+setwd('./code')
 
 library(NicheMapR)
 library(microclima)
@@ -28,7 +29,7 @@ warm <- 0
 Usrhyt <- 0.01
 clearsky <- FALSE
 soilgrids <- 0
-spatial <- '/Volumes/urdintxu/ncep_time'
+spatial <- '/Volumes/igel/spatial/ncep_time'
 ERR <- 1.5
 
 
@@ -74,51 +75,36 @@ save(micro, file='../results/micro_Jihlava.Rda', compress="xz")
 # microclimates under various scenarios of climate change
 #
 
-rcp <- c('rcp45', 'rcp85')
-gcm <- c('CCSM4', 'GFDL-CM3', 'HadGEM2-CC')
+sce <- c("cc45", "cc85", "gf45", "gf85", "hg45", "hg85") # scenarios
+load("/Volumes/sugandila/worldclim/offsets.RData")
 
-for(r in rcp){
-  for(g in gcm){
-    
-    ## microclimate modelling
-    folder.tmax <- paste('/Volumes/Urdintxu/bioclim_layers/bioclim_future_10_min/2070/',r,'/',g,'/tmax/dif',
-                         sep='')
-    folder.prec <- paste('/Volumes/Urdintxu/bioclim_layers/bioclim_future_10_min/2070/',r,'/',g,'/prec/dif',
-                         sep='')
-    
-    
-    tmax.dif.files <- list.files(folder.tmax, pattern='*.tif', full.names=T)
-    tmax.dif <- raster::stack(tmax.dif.files)
-    prec.dif.files <- list.files(folder.prec, pattern='*.tif', full.names=T)
-    prec.dif <- raster::stack(prec.dif.files)
-    
-    
-    tx.dif.local <- c(raster::extract(tmax.dif, cbind(lon,lat)))
-    prec.dif.local <- c(raster::extract(prec.dif, cbind(lon,lat)))
-    
-    
-    juldays12 <- c(15, 46, 74, 105, 135, 166, 196, 227, 258, 288, 319, 349)
-    
-    tx.dif.daily <- suppressWarnings(spline(juldays12, tx.dif.local, 
+for(s in sce){
+  
+  tx.dif.local <- offsets[[s]]$temp_offset
+  prec.dif.local <- offsets[[s]]$prec_offset
+  
+  
+  juldays12 <- c(15, 46, 74, 105, 135, 166, 196, 227, 258, 288, 319, 349)
+  
+  tx.dif.daily <- suppressWarnings(spline(juldays12, tx.dif.local, 
+                                          n = 365, xmin = 1, xmax = 365, method = "periodic"))
+  prec.dif.daily <- suppressWarnings(spline(juldays12, prec.dif.local, 
                                             n = 365, xmin = 1, xmax = 365, method = "periodic"))
-    prec.dif.daily <- suppressWarnings(spline(juldays12, prec.dif.local, 
-                                              n = 365, xmin = 1, xmax = 365, method = "periodic"))
-    
-    
-    warm <- c(tx.dif.daily$y[212:365], rep(tx.dif.daily$y, 8), tx.dif.daily$y[1:213])
-    rainoff <- c(prec.dif.daily$y[212:365], rep(prec.dif.daily$y, 8), prec.dif.daily$y[1:213])
-    ERR <- 2.5
-    
-    micro <- micro_ncep(SLE = SLE, soilgrids = soilgrids, dstart = dstart, dfinish = dfinish,
-                        Usrhyt = Usrhyt, slope = slope, aspect = aspect, REFL = REFL,
-                        hori = hori, minshade = minshade, maxshade = maxshade, rainmult = rainmult,
-                        loc = c(lon, lat), runshade = 1, run.gads = 1, snowmodel = 1, runmoist = 1,
-                        BulkDensity =  BulkDensity, cap = cap,
-                        Density = Density, Thcond = Thcond, SpecHeat = SpecHeat,
-                        windfac = windfac, spatial = spatial, ERR = ERR, dem = dem,
-                        warm = warm, rainoff = rainoff)
-    save(micro, file=paste0('../results/micro_',g,'_',r,'.Rda'), compress="xz")
-  }
+  
+  
+  warm <- c(tx.dif.daily$y[212:365], rep(tx.dif.daily$y, 8), tx.dif.daily$y[1:213])
+  rainoff <- c(prec.dif.daily$y[212:365], rep(prec.dif.daily$y, 8), prec.dif.daily$y[1:213])
+  ERR <- 2.5
+  
+  micro <- micro_ncep(SLE = SLE, soilgrids = soilgrids, dstart = dstart, dfinish = dfinish,
+                      Usrhyt = Usrhyt, slope = slope, aspect = aspect, REFL = REFL,
+                      hori = hori, minshade = minshade, maxshade = maxshade, rainmult = rainmult,
+                      loc = c(lon, lat), runshade = 1, run.gads = 1, snowmodel = 1, runmoist = 1,
+                      BulkDensity =  BulkDensity, cap = cap,
+                      Density = Density, Thcond = Thcond, SpecHeat = SpecHeat,
+                      windfac = windfac, spatial = spatial, ERR = ERR, dem = dem,
+                      warm = warm, rainoff = rainoff)
+  save(micro, file=paste0('../results/micro_',s,'.RData'), compress="xz")
 }
 
 
