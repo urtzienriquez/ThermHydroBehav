@@ -14,11 +14,6 @@
 
 # R Data files
 *.RData
-*micro_*5.Rda
-*ecto_*_sun_*.Rda
-*ecto_*_shade_*.Rda
-*ecto_*_shade.Rda
-*ecto_*_50cm_*.Rda
 
 # Fortran object files
 *.o
