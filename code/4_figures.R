@@ -10,7 +10,7 @@ source('./aux_functions.R')
 
 load('../results/micro_Jihlava.Rda')
 
-ecto_df_current_sun <- load_ectos(scenario = "cur", movement = "200cm", 
+ecto_df_current_sun <- load_ectos(path = "../results",scenario = "cur", movement = "200cm", 
                                   shading = "sun", micro = micro)
 
 # str(ecto_df_current_sun)

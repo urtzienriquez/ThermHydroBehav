@@ -30,12 +30,13 @@ smr.calc <- function(ecto){
 # acc/no acc (for that might need to rbind)
 # each ecto goes twice: once with smr and the other with acc_smr
 
-load_ectos <- function(scenario = c("cur", "C", "G", "H"), movement = c("200cm", "50cm"), 
+load_ectos <- function(path = path,
+                       scenario = c("cur", "C", "G", "H"), movement = c("200cm", "50cm"), 
                        shading = c("sun","shade"), micro = micro){
   if(scenario == "cur"){
-    patt <- paste0("*",movement,"_",shading,".Rda")
+    patt <- paste0("*",movement,"_",shading,"_current.Rda")
   }
-  ecto_files <- list.files(path='../results', pattern=patt, full.names=T)
+  ecto_files <- list.files(path=path, pattern=patt, full.names=T)
   
   a <- 1
   for(ec in ecto_files){
