@@ -251,7 +251,7 @@ plot_env
 
 
 ```{r, echo=F, fig.cap="Offsets of (a) temperature and (b) precipitation for each month as calculated by subtracting values under the current climate and different climate change scenarios. Climate change scenarios correspond to 'cc45': CCSM4 RCP 4.5; 'cc85': CCSM4 RCP 8.5; 'gf45': GFDL-CM3 RCP 4.5; 'gf85': GFDL-CM3 RCP 8.5; 'hg45': HadGEM2-CC RCP 4.5; and 'hg85': HadGEM2-CC RCP 8.5.", fig.height=2.5}
-load("./data/offsets.RData")
+load("./data/offsets.Rda")
 temp_offsets <- data.frame(month = 1:12, cc45 = t(unname(offsets[[1]]$temp_offset)))
 prec_offsets <- data.frame(month = 1:12, cc45 = t(unname(offsets[[1]]$prec_offset)))
 for(i in names(offsets)[-1]){
