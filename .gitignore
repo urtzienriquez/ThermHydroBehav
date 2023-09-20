@@ -18,5 +18,7 @@
 # Fortran object files
 *.o
 *.so
+
+# others
 ._*
 *.svg
