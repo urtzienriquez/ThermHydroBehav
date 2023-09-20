@@ -8,3 +8,6 @@ To install this version of NicheMapR you have to navigate to `/ThermHydroBehav/n
 
 ![alt text](https://github.com/urtzienriquez/ThermHydroBehav/blob/main/images/RStudio.png)
 
+
+
+![alt text](https://github.com/urtzienriquez/ThermHydroBehav/blob/main/figures/delta_smr_cc45.jgp)
