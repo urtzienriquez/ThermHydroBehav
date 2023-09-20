@@ -3,13 +3,14 @@ title: Appendix 3 - Example ectotherm models
 author: "Urtzi Enriquez-Urzelai & Lumír Gvoždík"
 date: "`r Sys.Date()`"
 output: 
-  html_document:
-    toc: true
-    toc_float: true
-    code_folding: show
   pdf_document: default
 editor_options:
   chunk_output_type: console
+header-includes:
+  - \renewcommand{\figurename}{Figure S3.}
+  - \makeatletter
+  - \def\fnum@figure{\figurename\thefigure}
+  - \makeatother
 ---
 
 ```{r setup, include=FALSE}
@@ -17,7 +18,7 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 knitr::opts_knit$set(root.dir = '/Volumes/sugandila/ThermHydroBehav/')
 ```
 
-Introduction
+This appendix shows how to run ectotherm models with different behavioral strategies and how to plot some example Te traces.
 
 
 ### Parameters and running the model
@@ -26,7 +27,7 @@ Introduction
 library(NicheMapR)
 ```
 
-Set parameters and ...
+Set model parameters related to thermal physiology based on Gvozdik and Kristin [1], and fit an exponential curve between empirically measured body temperatures and standard metabolic rates (SMR) using the `nls()` function.
 
 ```{r, eval=F}
 ##########################
@@ -47,6 +48,8 @@ colnames(mrs) <- c('temp', 'sex', 'mass', 'smr', 'mmr', 'scope', 'fscope')
 smr_model <- nls(smr ~ exp(a + b * temp), data = mrs, start = list(a = 0, b = 0))
 ```
 
+
+Load microclimatic conditions previously modelled for the study population (i.e. Jihlava) and set the rest of model parameters related to morphology and physiology.
 
 ```{r, eval=F}
 ##########################
@@ -88,12 +91,19 @@ diurn <- 0
 nocturn <- 1
 crepus <- 1
 shade_seek <- 0
+```
 
+Then, we set the behavioral strategy that we want to model. For that we have defined two parameters: `burrowtmp`, related to thermoregulation (1 = cold; 2 = warm; and 3 = passive strategies) and `burrowwtr`, related to hydroregulation (0 = control, 1 = hydroregulation/'moist' strategy).
+
+```{r, eval=F}
 # set behavioral strategy
 behav <- 1 # 1 = cold shelters; 2 = warm shelters; 3 = passive
 bwater <- 1 # following moist shelters (0 = no, 1 = yes)
+```
 
+Finally, run the model.
 
+```{r, eval=F}
 ecto <- ectotherm(burrowtmp = behav, burrowwtr = bwater,
                   Ww_g = Ww_g, shape = shape, burrow=burrow,
                   T_F_min = T_F_min, T_F_max = ubt, T_pref = m_tpref,
@@ -106,7 +116,7 @@ ecto <- ectotherm(burrowtmp = behav, burrowwtr = bwater,
 
 ```
 
-Models can be run in a loop as in the `2_ectotherm_model.R` script, with the different behavioral options [.....]. Once results are stored, they can be loaded to inspect them.
+Models can be run in a loop as in the `2_ectotherm_model.R` script, with the different behavioral options. Once results are stored, they can be loaded to inspect them.
 
 ```{r}
 load('./results/micro_Jihlava.Rda')
@@ -116,7 +126,9 @@ ecto_df_current_sun <- load_ectos(path = "./results", scenario = "cur", movement
                                   shading = "sun", micro = micro)
 ```
 
-```{r}
+Here we only show example *Te* traces for simulations under unconstrained movement (up to 200 cm), in full sun (0% shade) and under the current climate.
+
+```{r, out.width="100%", fig.cap="Simulated body temperatures (Te; black lines), activity levels (I: ‘inactive’, A: ‘active aboveground’; orange lines), and selected depths (brown lines) of newts moving vertically constrained (first 50cm of the soil), under different thermo- and hydroregulatory behaviour combinations. Red lines: CTmax, Blue lines: CTmin, Dashed red lines: VTmax, Dashed blue lines: VTmin (see Materials and Methods for values)."}
 par(mfrow=c(2,1), mar=c(3,4,0.5,0.5))
 
 for(i in levels(ecto_df_current_sun$model)){
@@ -130,14 +142,14 @@ for(i in levels(ecto_df_current_sun$model)){
   dates <- days+metout$TIME/60/24-1 # dates for hourly output
   
   
-  with(environ, plot(TC ~ dates, ylab = "", xlab="", col = 'black', ylim = c(-70, 38), type = "l", yaxt = 'n'))
+  with(environ, plot(TC ~ dates, ylab = "", xlab="", col = 'black', ylim = c(-70, 45), type = "l", yaxt = 'n'))
   with(environ, points(ACT * 2 - 10 ~ dates, type = "l", pch = 16, col = "orange"))
   with(environ, points(DEP/4 - 15 ~ dates, type = "l", col = "brown"))
   abline(4, 0, lty = 2, col = 'blue') # T_F_min
   abline(20, 0, lty = 2, col = 'red') # T_F_max
   abline(-2, 0, col = 'blue') # CT_min
   abline(36, 0, col = 'red') # CT_max
-  ytick<-seq(0, 40, by=5)
+  ytick<-seq(0, 45, by=5)
   axis(side=2, at=ytick, labels = TRUE, las = 2, cex.axis = .7)
   mtext(text = c('Active', 'Inactive'), side = 2, line = 1, at = c(-6, -10), cex = .7, las = 2)
   ytick<-seq(-6, -10, by=-4)
@@ -147,14 +159,29 @@ for(i in levels(ecto_df_current_sun$model)){
   axis(side=2, at=ytick, labels = FALSE)
   abline(h = -15, lty = 2, col = 'grey')
   mtext(text = c('body temperature (°C)', 'depth (cm)'), side = 2, line = 2.5, at = c(22, -40), cex = .7)
-  text(15, c(20 + 1, 4 + 1), c('VTmax', 'VTmin'), col = c('red', 'blue'), cex = 0.75)
-  text(15, c(36 + 1, -2 + 1), c('CTmax', 'CTmin'), col = c('red', 'blue'), cex = 0.75)
+  text(environ$dates[10], c(20 + 1, 4 + 1), c('VTmax', 'VTmin'), col = c('red', 'blue'), cex = 0.75)
+  text(environ$dates[10], c(36 + 1, -2 + 1), c('CTmax', 'CTmin'), col = c('red', 'blue'), cex = 0.75)
+  
+  if(i == "ecto_b1w0_200cm_sun_current"){
+    text(environ$dates[length(environ$dates)/3], 42, "cold strategy", cex = 0.75)
+  } else if(i == "ecto_b1w1_200cm_sun_current"){
+    text(environ$dates[length(environ$dates)/3], 42, "cold-moist strategy", cex = 0.75)
+  } else if(i == "ecto_b2w0_200cm_sun_current"){
+    text(environ$dates[length(environ$dates)/3], 42, "warm strategy", cex = 0.75)
+  } else if(i == "ecto_b2w1_200cm_sun_current"){
+    text(environ$dates[length(environ$dates)/3], 42, "warm-moist strategy", cex = 0.75)
+  } else if(i == "ecto_b3w0_200cm_sun_current"){
+    text(environ$dates[length(environ$dates)/3], 42, "passive strategy", cex = 0.75)
+  } else if(i == "ecto_b3w1_200cm_sun_current"){
+    text(environ$dates[length(environ$dates)/3], 42, "passive-moist strategy", cex = 0.75)
+  }
   
 }
 
 ```
 
 
-<div class="tocify-extend-page" data-unique="tocify-extend-page" style="height: 0;"></div>
+\newpage
+### References
 
-
+[1] Gvoždík L, Kristín P. 2017 Economic thermoregulatory response explains mismatch between thermal physiology and behaviour in newts. *Journal of Experimental Biology* **220**, 1106–1111. (doi:10.1242/jeb.145573)

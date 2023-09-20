@@ -62,6 +62,26 @@ subset_env <- function(ectos_df, season = c("summer", "winter")){
 }
 
 
+# function to format data to make statistical comparisons
+# data = ec_cur_sun_200cm
+format_env <- function(data){
+  df_data <- data.frame(doy = rep(data$DOY, times=2), 
+                        time = rep(data$TIME, times=2), 
+                        smr = c(data$SMR, data$SMR_acc),
+                        acc = as.factor(rep(c('no', 'yes'), each=nrow(data))), 
+                        model = rep(data$model, times=2), 
+                        therm = NA, 
+                        hydro = NA)
+  df_data$therm[grep("b1",df_data$model)] <- 'cold'
+  df_data$therm[grep("b2",df_data$model)] <- 'warm'
+  df_data$therm[grep("b3",df_data$model)] <- 'passive'
+  df_data$hydro[grep("w0",df_data$model)] <- 'no-moist'
+  df_data$hydro[grep("w1",df_data$model)] <- 'moist'
+  df_data$therm <- as.factor(df_data$therm)
+  df_data$hydro <- as.factor(df_data$hydro)
+  return(df_data)
+}
+
 #########
 # plotting functions
 
@@ -83,8 +103,10 @@ plot_smr <- function(data, period=c('all', 'subset'), title='',
       geom_line(aes(hour, cs, color = model), linetype = "solid", linewidth = 0.7) +
       geom_line(aes(hour, cs_acc, color = model), linetype = "dashed", linewidth = 0.7) + 
       scale_colour_manual(values=c('#0059FF', '#86B0FF', '#FF8300', '#FEBB74', '#01BB04', '#8AFF86')) +
-      theme_minimal() +
-      theme(legend.position = 'none') +
+      theme_bw() +
+      theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+            legend.position = 'none') +
       ggtitle(title) +
       labs(x = xlab, y = ylab)
   } else {
@@ -94,8 +116,10 @@ plot_smr <- function(data, period=c('all', 'subset'), title='',
       geom_line(aes(dates, cs_acc, color = model), linetype = "dashed", linewidth = 0.7) + 
       scale_colour_manual(values=c('#0059FF', '#86B0FF', '#FF8300', '#FEBB74', '#01BB04', '#8AFF86'),
                           labels=c('cold', 'cold-moist', 'warm', 'warm-moist', 'passive', 'passive-moist')) +
-      theme_minimal() +
-      theme(legend.position = c(0.2, 0.70)) +
+      theme_bw() +
+      theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+            legend.position = c(0.2, 0.70)) +
       ggtitle(title) +
       labs(x = xlab, y = ylab)
   }
@@ -105,9 +129,10 @@ plot_smr <- function(data, period=c('all', 'subset'), title='',
 # plot cumulative O2 consumption increase with CC scenario
 plot_delta_smr <- function(data_baseline, data_cc,
                            period=c('all', 'summer', 'winter'), title='', 
-                           xlab = "", ylab = expression(paste('cumulative increase in ', O[2], ' consumed (ml)'))){
-  data_cc$deltaSMR <- data_cc$SMR - data_baseline$SMR
-  data_cc$deltaSMR_acc <- data_cc$SMR_acc - data_baseline$SMR_acc
+                           xlab = "", ylab = 'Energy use change (kJ)',
+                           legend="no"){
+  data_cc$deltaSMR <- (data_cc$SMR - data_baseline$SMR) * 20.1 / 1000 # 20.1 Joules/ o2 ml
+  data_cc$deltaSMR_acc <- (data_cc$SMR_acc - data_baseline$SMR_acc) * 20.1 / 1000 # 20.1 Joules/ o2 ml
   if(period == 'summer'){
     data_cc <- subset_env(data_cc, season = "summer")
   } else if(period == 'winter'){
@@ -123,26 +148,48 @@ plot_delta_smr <- function(data_baseline, data_cc,
     for(i in unique(csdf$model)){
       csdf$hour[csdf$model == i] <- 1:length(csdf$hour[csdf$model == i])
     }
-    csdf %>% 
-      ggplot() +
-      geom_line(aes(hour, cs, color = model), linetype = "solid", linewidth = 0.7) +
-      geom_line(aes(hour, cs_acc, color = model), linetype = "dashed", linewidth = 0.7) + 
-      geom_hline(yintercept=0, linetype='dashed') +
-      scale_colour_manual(values=c('#0059FF', '#86B0FF', '#FF8300', '#FEBB74', '#01BB04', '#8AFF86')) +
-      theme_minimal() +
-      theme(legend.position = 'none') +
-      ggtitle(title) +
-      labs(x = xlab, y = ylab)
+    if(legend == "no"){
+      csdf %>% 
+        ggplot() +
+        geom_line(aes(hour, cs, color = model), linetype = "solid", linewidth = 0.7) +
+        geom_line(aes(hour, cs_acc, color = model), linetype = "dashed", linewidth = 0.7) + 
+        geom_hline(yintercept=0, linetype='dashed') +
+        scale_colour_manual(values=c('#0059FF', '#86B0FF', '#FF8300', '#FEBB74', '#01BB04', '#8AFF86')) +
+        theme_bw() +
+        theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+              panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+              legend.position = 'none') +
+        ggtitle(title) +
+        labs(x = xlab, y = ylab)
+    } else if(legend == "yes"){
+      csdf %>% 
+        ggplot() +
+        geom_line(aes(hour, cs, color = model), linetype = "solid", linewidth = 0.7) +
+        geom_line(aes(hour, cs_acc, color = model), linetype = "dashed", linewidth = 0.7) + 
+        geom_hline(yintercept=0, linetype='dashed') +
+        scale_colour_manual(name = "Behavior",
+                            values=c('#0059FF', '#86B0FF', '#FF8300', '#FEBB74', '#01BB04', '#8AFF86'),
+                            labels=c('cold', 'cold-moist', 'warm', 'warm-moist', 'passive', 'passive-moist')) +
+        theme_bw() +
+        theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+              panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+              legend.position = c(0.2, 0.70)) +
+        ggtitle(title) +
+        labs(x = xlab, y = ylab)
+    }
   } else {
     csdf %>% 
       ggplot() +
       geom_line(aes(dates, cs, color = model), linetype = "solid", linewidth = 0.7) +
       geom_line(aes(dates, cs_acc, color = model), linetype = "dashed", linewidth = 0.7) + 
       geom_hline(yintercept=0, linetype='dashed') +
-      scale_colour_manual(values=c('#0059FF', '#86B0FF', '#FF8300', '#FEBB74', '#01BB04', '#8AFF86'),
+      scale_colour_manual(name = "Behavior",
+                          values=c('#0059FF', '#86B0FF', '#FF8300', '#FEBB74', '#01BB04', '#8AFF86'),
                           labels=c('cold', 'cold-moist', 'warm', 'warm-moist', 'passive', 'passive-moist')) +
-      theme_minimal() +
-      theme(legend.position = c(0.2, 0.70)) +
+      theme_bw() +
+      theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+            legend.position = c(0.2, 0.70)) +
       ggtitle(title) +
       labs(x = xlab, y = ylab)
   }

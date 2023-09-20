@@ -3,13 +3,14 @@ title: Appendix 2 - Validation of the microclimate model in Studenec, Czechia
 author: "Urtzi Enriquez-Urzelai & Lumír Gvoždík"
 date: "`r Sys.Date()`"
 output: 
-  html_document:
-    toc: true
-    toc_float: true
-    code_folding: show
   pdf_document: default
 editor_options:
   chunk_output_type: console
+header-includes:
+  - \renewcommand{\figurename}{Figure S2.}
+  - \makeatletter
+  - \def\fnum@figure{\figurename\thefigure}
+  - \makeatother
 ---
 
 ```{r setup, include=FALSE}
@@ -17,7 +18,7 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 knitr::opts_knit$set(root.dir = '/Volumes/sugandila/ThermHydroBehav/data/micro_studenec')
 ```
 
-In this document we run NicheMapR's microclimate model at the Institute of Vertebrate Biology, Studenec (Czechia) using NCEP data as forcing variables. We compare model results with logged data for the period XXX to XXX. 
+In this document we run NicheMapR's microclimate model at the Institute of Vertebrate Biology, Studenec (coordinates: 16.056838, 49.224799; Czechia) using NCEP data as forcing variables. We compare model results with logged data from November 2020 to April 2021. 
 
 Humidity and temperature dataloggers were placed outdoors of the institute at different depths. 
 
@@ -142,7 +143,7 @@ tsun1_50cm <- data.frame(datetime = round(as.POSIXct(strptime(tsun1_50cm[,1], "%
 
 ```
 
-```{r, out.width="100%", echo=F}
+```{r, out.width="100%", echo=F, fig.cap="Simulated (black lines) and logged temperature data (red lines) at full sun from 01/08/2020 to 31/07/2021, and for the recorded period only at 0, 10, 30 and 50 cm deep."}
 source("../../code/aux_functions.R") # To calculate RMSEs
 
 # plot
@@ -183,9 +184,10 @@ text(as.POSIXct("2020-12-15 00:00:00 UTC"), max(soil$D50cm) * 0.8,
 
 ```
 
+\newpage
 ### Temperature at shade (90%)
 
-```{r, out.width="100%", echo=F}
+```{r, out.width="100%", echo=F, fig.cap="Simulated (black lines) and logged temperature data (red lines) at deep shade from 01/08/2020 to 31/07/2021, and for the recorded period only at 0, 10, 30 and 50 cm deep."}
 # soil temperature
 # read logged data
 tshade2_0cm <- read.table('shade_temp_2_0.txt', header=F, sep=',', fill=T)
@@ -242,9 +244,10 @@ text(as.POSIXct("2020-12-15 00:00:00 UTC"), max(shadsoil$D50cm) * 0.8,
 
 ```
 
+\newpage
 ### Humidity at full sun
 
-```{r, out.width="100%", echo=F}
+```{r, out.width="100%", echo=F, fig.cap="Simulated (black lines) and logged soil humidity (red lines) at full sun from 01/08/2020 to 31/07/2021, and for the recorded period only at 0, 10, 30 and 50 cm deep."}
 # soil humidity
 # read logged data
 hsun1_0cm <- read.table('sun_hum_1_0.txt', header=F, sep=',', fill=T)
@@ -288,9 +291,10 @@ text(as.POSIXct("2020-12-15 00:00:00 UTC"), 15,
      paste0("RMSE = ", rmse.calc(humid, hsun1_50cm, depth=8, micro)*100))
 ```
 
+\newpage
 ### Humidity at shade (90%)
 
-```{r, out.width="100%", echo=F}
+```{r, out.width="100%", echo=F, fig.cap="Simulated (black lines) and logged soil humidity (red lines) at deep shade from 01/08/2020 to 31/07/2021, and for the recorded period only at 0, 10, 30 and 50 cm deep."}
 # soil humidity
 # read logged data
 hshade1_10cm <- read.table('shade_hum_1_10.txt', header=F, sep=',', fill=T)
@@ -332,16 +336,5 @@ with(shadhumid, plot(micro$dates, RH50cm * 100, type='l', ylim=c(0,100),
 with(hshade1_50cm, points(datetime, hum * 100, type='l', col='red'))
 text(as.POSIXct("2020-12-15 00:00:00 UTC"), 15, 
      paste0("RMSE = ", rmse.calc(shadhumid, hshade1_50cm, depth=8, micro)*100))
-```
-
-### Snow cover
-
-```{r, out.width="100%", echo=F}
-metout <- data.frame(micro$metout)
-shadmet <- data.frame(micro$shadmet)
-
-par(mfrow=c(2,1), mar=c(2.5, 4, 0.5, 0.1))
-with(metout, plot(micro$dates, SNOWFALL, type='l', xlab='', ylab='Snowfall (cm)'))
-with(metout, plot(micro$dates, SNOWDEP, type='l', xlab='', ylab='Snow depth (cm)'))
 ```
 

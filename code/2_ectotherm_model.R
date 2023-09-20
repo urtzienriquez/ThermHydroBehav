@@ -32,6 +32,7 @@ plot(smr ~ temp, data=mrs, pch=19, cex=.5,
      xlab='Temperature (ºC)', 
      ylab=expression(paste('SMR (in mL ', O[2], ' ', h^-1, ')')))
 lines(new$temp, new$predicted)
+lines(new$temp, new$predicted * 0.7, col='gray', lty=2) # acclimated
 
 
 ##########################
