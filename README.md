@@ -1,4 +1,4 @@
-### Accompanying repository for: U. Enriquez-Urzelai & L. Gvozdik (under review) Impacts of behaviour and acclimatImpacts of behaviour and acclimation of metabolic rate on sheltered ectotherms’ energetics: a climate change perspective.
+**Accompanying repository for:** U. Enriquez-Urzelai & L. Gvozdik (under review) Impacts of behaviour and acclimatImpacts of behaviour and acclimation of metabolic rate on sheltered ectotherms’ energetics: a climate change perspective.
 
 This repository contains all the data and code needed to reproduce our paper. 
 
