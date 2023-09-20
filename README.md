@@ -8,6 +8,6 @@ To install this version of NicheMapR you have to navigate to `/ThermHydroBehav/n
 
 ![alt text](https://github.com/urtzienriquez/ThermHydroBehav/blob/main/images/RStudio.png)
 
-
+Using the R scripts in the `code` folder you can run our biophysical simulations (microclimate and ectotherm models) and reproduce all the figures. In addition, all appendices to the paper and corresponding RMarkdown files are also available. 
 
 ![alt text](https://github.com/urtzienriquez/ThermHydroBehav/blob/main/figures/delta_smr_cc45.jpg)
