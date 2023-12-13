@@ -15,7 +15,7 @@ header-includes:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
-knitr::opts_knit$set(root.dir = '/Volumes/sugandila/ThermHydroBehav')
+knitr::opts_knit$set(root.dir = '/media/urtzi/sugandila/ThermHydroBehav')
 ```
 
 ```{r, echo=F}
@@ -40,7 +40,7 @@ knitr::include_graphics("./images/jihlava.jpg")
 
 To determine the thermal sensitivity of standard metabolic rates (SMR), we fitted an exponential curve between metabolic rates and body temperatures using the data presented in [1] (Fig. S1.2). Podhajský and Gvoždík [2] reported a reduction in SMR of a factor ranging from 0.7 to 0.65 (ca. 30% reduction) in wild-caught newts between autumn and winter. Thus, to account for seasonal acclimation, we assumed that newts were capable of reducing SMR to 70% of its maximum value between seasons: i.e. for acclimated individuals we applied a factor of 0.7 (i.e. 70%) to the estimated SMR from the empirical Tb – SMR relationship. 
 
-```{r, echo=F, out.width="70%", fig.align = 'center', fig.cap = "Empirical relationship between body tempèratures and standard metabolic rates (SMR) using the data presented in [1]. The solid line represents the result of the exponential curve obtained, while the dashed line is the relationship of cclimated individuals (by multiplying the exponential curve by a factor of 0.7). Note that as predicted by theory, the acclimation response reduces both the magnitude and thermal sensitivity of maintenance metabolic rate."}
+```{r, echo=F, out.width="70%", fig.align = 'center', fig.cap = "Empirical relationship between body temperatures and standard metabolic rates (SMR) using the data presented in [1]. The solid line represents the result of the exponential curve obtained, while the dashed line is the relationship of acclimated individuals (by multiplying the exponential curve by a factor of 0.7). Note that as predicted by theory, the acclimation response reduces both the magnitude and thermal sensitivity of maintenance metabolic rate."}
 ## metabolic rates
 mrs <- read.table('./data/Gvozdik_Kristin_AS.txt', 
                   header=T, sep='\t')
@@ -62,7 +62,7 @@ lines(new$temp, new$predicted * 0.7, col='gray', lty=2, lwd=2) # acclimated
 \newpage
 ### Microclimatic conditions along the year {-}
 
-```{r, echo=F, fig.cap="Simulated microclimatic conditions at full sun along the year and at different depths. a) Average, b) minimum and c) maximum temperature, and d) water potential. Note that each value represents either the mean, minimum or maximum of the whole simulated period.", fig.height=6}
+```{r, echo=F, fig.cap="Simulated microclimatic conditions at full sun along the year and at different depths. a) Average, b) minimum and c) maximum temperature, and d) water potential. Note that each value represents either the mean, minimum or maximum of the whole simulated period. Note also that water potential depends mostly on meteorological conditions rather than season.", fig.height=6}
 # load microclimate model results 
 load('./results/micro_Jihlava.Rda')
 micro_current <- micro
@@ -157,7 +157,7 @@ plot_env
 ```
 
 
-```{r, echo=F, fig.cap="Simulated microclimatic conditions at deep (90%) shade along the year and at different depths. a) Average, b) minimum and c) maximum temperature, and d) water potential. Note that each value represents either the mean, minimum or maximum of the whole simulated period.", fig.height=6}
+```{r, echo=F, fig.cap="Simulated microclimatic conditions at deep (90%) shade along the year and at different depths. a) Average, b) minimum and c) maximum temperature, and d) water potential. Note that each value represents either the mean, minimum or maximum of the whole simulated period. Note also that water potential depends mostly on meteorological conditions rather than season.", fig.height=6}
 
 soil_sh <- data.frame(micro_current$shadsoil)[,-3]
 colnames(soil_sh)[-c(1,2)] <- c("2.5 cm","5 cm","10 cm","15 cm","20 cm","30 cm","50 cm","100 cm","200 cm")
@@ -285,7 +285,7 @@ plot_env
 ```
 
 
-```{r, echo=F, fig.cap="Simulated change in microclimatic conditions at full sun (0% shade) along the year and at different depths given the harshest climate change scenario (GFDL-CM3 – RCP 8.5). a) Average, b) minimum and c) maximum temperature, and d) water potential. Note that each value represents either the mean, minimum or maximum of the whole simulated period. Regarding water potential, the gray area represents the periods with dryer conditions while coloured areas represent either the same moisture than under the current climate (values equal to 1) or moister conditions (values < 1)", fig.height=6}
+```{r, echo=F, fig.cap="Simulated change in microclimatic conditions at full sun (0% shade) along the year and at different depths given the harshest climate change scenario (GFDL-CM3 – RCP 8.5). a) Average, b) minimum and c) maximum temperature, and d) water potential. Note that each value represents either the mean, minimum or maximum of the whole simulated period. Regarding water potential, the gray area represents the periods with dryer conditions while coloured areas represent either the same moisture than under the current climate (values equal to 1) or moister conditions (values < 1).", fig.height=6}
 soil_cc <- data.frame(micro_cc$soil)[,-3]
 colnames(soil_cc)[-c(1,2)] <- c("2.5 cm","5 cm","10 cm","15 cm","20 cm","30 cm","50 cm","100 cm","200 cm")
 
@@ -717,20 +717,6 @@ plot_all_delta_smr <- plot_grid(title, plot_all_delta_smr, ncol=1, rel_heights=c
 plot_all_delta_smr
 ```
 
-
-```{r, echo=F, eval=F}
-# with(ec_cur_sun_50cm[ec_cur_sun_50cm$ACT == 0,], boxplot(TC ~ model, ylim=c(-5,40)))
-# abline(h=c(-2, 36))
-
-ec_cc_sun_200cm <- load_ectos(path = "./results",
-                              scenario = "cc45",
-                              movement = "200cm",
-                              shading = "sun",
-                              micro = micro)
-
-with(ec_cc_sun_200cm[ec_cc_sun_200cm$ACT == 0,], boxplot(TC ~ model, ylim=c(-5,40)))
-abline(h=c(-2, 36), lty=2)
-```
 
 \newpage
 ### References {-}

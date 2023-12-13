@@ -15,7 +15,7 @@ header-includes:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
-knitr::opts_knit$set(root.dir = '/Volumes/sugandila/ThermHydroBehav/data/micro_studenec')
+knitr::opts_knit$set(root.dir = '/media/urtzi/sugandila/ThermHydroBehav/data/micro_studenec')
 ```
 
 In this document we run NicheMapR's microclimate model at the Institute of Vertebrate Biology, Studenec (coordinates: 16.056838, 49.224799; Czechia) using NCEP data as forcing variables. We compare model results with logged data from November 2020 to April 2021. 
